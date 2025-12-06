@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JobWizard AI — Dashboard</title>
+<style>
+  :root{
+    --bg:#0a0f1c;
+    --card:#0f1720;
+    --muted:#cdd7e0;
+    --accent:#00eaff;
+    --accent2:#1ef7ff;
+    --glass: rgba(255,255,255,0.03);
+    --glass-border: rgba(0,234,255,0.12);
+    --radius:14px;
+    --shadow: 0 8px 30px rgba(0,0,0,0.6);
+    --mono: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  }
+
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:var(--mono);
+background: linear-gradient(180deg,var(--bg) 0%, #07101a 100%);
+color: #e6f7fb;
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+min-height:100vh;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:260px;
+background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+border-right:1px solid var(--glass-border);
+padding:24px;
+display:flex;
+flex-direction:column;
+gap:18px;
+position:relative;
+min-height:100vh;
+}
+.brand{
+display:flex; gap:12px; align-items:center;
+margin-bottom:6px;
+}
+.orb{
+width:44px;height:44px;border-radius:10px;
+background:linear-gradient(135deg,var(--accent),var(--accent2));
+box-shadow:0 6px 20px rgba(0,234,255,0.14), 0 0 30px rgba(0,234,255,0.08);
+display:flex;align-items:center;justify-content:center;font-weight:800;color:#012;
+}
+.brand h1{font-size:16px;margin:0;color:var(--accent);letter-spacing:0.4px}
+.brand p{font-size:12px;margin:0;color:var(--muted)}
+
+nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.nav-item{
+display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;
+color:var(--muted);cursor:pointer;border:1px solid transparent;
+transition:0.18s ease;
+}
+.nav-item:hover{background:var(--glass); color:var(--accent); transform:translateY(-2px)}
+.nav-item.active{background:linear-gradient(90deg, rgba(0,234,255,0.06), rgba(30,247,255,0.02)); color:var(--accent); box-shadow: inset 0 -1px 0 rgba(255,255,255,0.02); border:1px solid rgba(0,234,255,0.06)}
+
+.nav-item svg{flex-shrink:0; opacity:0.9}
+.sidebar-bottom{margin-top:auto;font-size:12px;color:var(--muted)}
+.sidebar-bottom a{color:var(--muted); text-decoration:none}
+
+/* MAIN */
+.main{
+flex:1;
+padding:28px;
+min-height:100vh;
+overflow:auto;
+}
+.topbar{
+display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;
+}
+.greeting{
+display:flex;flex-direction:column;
+gap:6px;
+}
+.greeting h2{margin:0;font-size:20px;color:var(--accent); text-shadow: 0 0 8px rgba(0,234,255,0.08)}
+.greeting p{margin:0;color:var(--muted);font-size:13px}
+
+.actions{display:flex;gap:10px;align-items:center}
+.icon-btn{
+padding:10px 14px;border-radius:10px;border:1px solid var(--glass-border);
+background:var(--glass); cursor:pointer; color:var(--muted);
+box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+.cta{
+background:linear-gradient(90deg,var(--accent),var(--accent2));
+color:#001; padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;
+box-shadow:0 8px 30px rgba(0,234,255,0.12);
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns: repeat(12,1fr);
+gap:18px;
+}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:20px;border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--glass-border)}
+.col-3{grid-column: span 3;}
+.col-6{grid-column: span 6;}
+.col-4{grid-column: span 4;}
+.col-8{grid-column: span 8;}
+.col-12{grid-column: span 12;}
+
+.stat-title{font-size:13px;color:var(--muted)}
+.stat-value{font-size:28px;color:var(--accent);font-weight:700;margin-top:8px}
+.stat-sublabel{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* action cards */
+.actions-grid{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.action-card{
+flex:1; min-width:200px; padding:18px; border-radius:12px; border:1px solid var(--glass-border);
+background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+cursor:pointer; transition:0.18s; color:var(--muted);
+}
+.action-card:hover{transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.6); color:var(--accent)}
+.action-card h4{margin:0;color:var(--accent); font-size:16px}
+.action-card p{margin:6px 0 0 0;font-size:13px; color:var(--muted)}
+
+/* activity */
+.activity-list{display:flex;flex-direction:column;gap:12px}
+.activity-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+.activity-item .what{color:var(--muted);font-size:13px}
+.activity-item .time{font-size:12px;color:#8fa6b1}
+
+/* responsive */
+@media (max-width:1000px){
+.sidebar{display:none; position:fixed; z-index:40; left:0; top:0; bottom:0}
+body.show-sidebar .sidebar{display:flex}
+.main{padding:18px}
+.grid{grid-template-columns:repeat(6,1fr)}
+.col-3{grid-column:span 3}
+.col-6{grid-column:span 6}
+}
+@media (max-width:600px){
+.grid{grid-template-columns:repeat(2,1fr)}
+.col-3{grid-column:span 2}
+.col-6{grid-column:span 2}
+}
+
+/* small helpers */
+.muted{color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
+.badge{padding:6px 10px;border-radius:8px;background:rgba(0,234,255,0.08);color:var(--accent);font-weight:600} </style>
+
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" aria-label="Sidebar">
+    <div class="brand" role="img" aria-label="JobWizard">
+      <div class="orb">JW</div>
+      <div>
+        <h1>JobWizard AI</h1>
+        <p class="small">Career assistant</p>
+      </div>
+    </div>
+
+
+<nav role="navigation" aria-label="Main">
+  <div class="nav-item active" data-link="dashboard.html" onclick="navigate('dashboard.html', this)">
+    <!-- home icon -->
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3l9 7.5" stroke="#00eaff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>Dashboard</div>
+  </div>
+
+  <div class="nav-item" data-link="resume.html" onclick="navigate('resume.html', this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#89f9ff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>Resume Builder</div>
+  </div>
+
+  <div class="nav-item" data-link="interview.html" onclick="navigate('interview.html', this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 1v22" stroke="#89f9ff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>Interview Coach</div>
+  </div>
+
+  <div class="nav-item" data-link="jobs.html" onclick="navigate('jobs.html', this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-2-2h-3" stroke="#89f9ff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>Job Match</div>
+  </div>
+
+  <div class="nav-item" data-link="settings.html" onclick="navigate('settings.html', this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#89f9ff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>Settings</div>
+  </div>
+
+  <div class="nav-item" onclick="logout()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#ff7b7b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#ff7b7b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="color:#ff9b9b">Logout</div>
+  </div>
+</nav>
+
+<div class="sidebar-bottom small">
+  <div>Plan: <span class="badge">Pro</span></div>
+  <div style="margin-top:10px">© 2025 JobWizard AI</div>
+</div>
+
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main" role="main">
+    <div class="topbar">
+      <div class="greeting" aria-live="polite">
+        <h2 id="greeting-title">Welcome back, Rohan</h2>
+        <p id="greeting-sub">Here's what's happening with your career today.</p>
+      </div>
+
+
+  <div class="actions">
+    <button class="icon-btn" title="Notifications" onclick="alert('No new notifications')">
+      🔔
+    </button>
+    <button class="icon-btn" title="Help" onclick="alert('Help coming soon')">
+      ❔
+    </button>
+    <button class="cta" onclick="window.location.href='resume.html'">Create Resume</button>
+    <button class="icon-btn" id="hamburger" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+  </div>
+</div>
+
+<section class="grid" aria-label="Quick stats">
+  <div class="card col-3">
+    <div class="stat-title">Applications Sent</div>
+    <div class="stat-value" data-target="0" id="stat-apps">0</div>
+    <div class="stat-sublabel">Last 30 days</div>
+  </div>
+
+  <div class="card col-3">
+    <div class="stat-title">Interview Score Avg</div>
+    <div class="stat-value" data-target="0" id="stat-score">0</div>
+    <div class="stat-sublabel">Higher is better</div>
+  </div>
+
+  <div class="card col-3">
+    <div class="stat-title">Profile Matches</div>
+    <div class="stat-value" data-target="0" id="stat-matches">0</div>
+    <div class="stat-sublabel">Jobs recommended</div>
+  </div>
+
+  <div class="card col-3">
+    <div class="stat-title">Resume Strength</div>
+    <div class="stat-value" data-target="0" id="stat-strength">0</div>
+    <div class="stat-sublabel">Based on skills & keywords</div>
+  </div>
+
+  <div class="card col-8">
+    <h3 style="margin-top:0;color:var(--accent)">Quick Actions</h3>
+    <div class="actions-grid">
+      <div class="action-card" onclick="window.location.href='resume.html'">
+        <h4>AI Resume Builder</h4>
+        <p>Generate a tailored resume in minutes using AI templates and keyword optimization.</p>
+      </div>
+      <div class="action-card" onclick="window.location.href='interview.html'">
+        <h4>Interview Coach</h4>
+        <p>Practice answers, get scoring, and improve with suggestions.</p>
+      </div>
+      <div class="action-card" onclick="window.location.href='jobs.html'">
+        <h4>Job Match</h4>
+        <p>Find roles that match your skills.</p>
+      </div>
+      <div class="action-card" onclick="window.location.href='settings.html'">
+        <h4>Account Settings</h4>
+        <p>Manage plan, billing and profile settings.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card col-4">
+    <h3 style="margin-top:0;color:var(--accent)">Recent Activity</h3>
+    <div class="activity-list" id="activity">
+      <div class="activity-item"><div class="what">Uploaded resume (resume_v4.pdf)</div><div class="time">Na</div></div>
+      <div class="activity-item"><div class="what">Applied to: Frontend Engineer</div><div class="time">Na</div></div>
+      <div class="activity-item"><div class="what">Interview practice: System Design</div><div class="time">Na</div></div>
+    </div>
+  </div>
+
+  <div class="card col-12">
+    <h3 style="margin-top:0;color:var(--accent)">Weekly Summary</h3>
+    <p class="muted">This week you improved your interview score by <b>+6%</b> and gained <b>8</b> new job matches.</p>
+  </div>
+</section>
+
+
+  </main>
+
+<script>
+  // NAVIGATION helpers (demo)
+  function navigate(page, node){
+    // visually set active
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+    // demo navigation behaviour (in real app you'd route or load)
+    if(page === 'dashboard.html') {
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else {
+      // if the page file exists, navigate; else alert
+      fetch(page, {method:'HEAD'}).then(r=>{
+        if(r.ok) window.location.href = page;
+        else alert('Page not found locally: ' + page);
+      }).catch(()=>{ alert('Unable to open ' + page); });
+    }
+  }
+
+  function logout(){
+    // simple demo
+    if(confirm('Log out from JobWizard AI?')){
+      window.location.href = 'index.html';
+    }
+  }
+
+  // sidebar toggle on mobile
+  function toggleSidebar(){
+    document.body.classList.toggle('show-sidebar');
+  }
+
+  // animated counters
+  function animateCount(el, duration=1100){
+    const target = +el.getAttribute('data-target');
+    const start = 0;
+    const stepTime = Math.max(Math.floor(duration / target), 12);
+    let current = start;
+    const timer = setInterval(()=>{
+      current += Math.ceil(target/20);
+      if(current >= target){
+        el.textContent = target;
+        clearInterval(timer);
+      } else {
+        el.textContent = current;
+      }
+    }, stepTime);
+  }
+
+  window.addEventListener('load', ()=>{
+    const stats = document.querySelectorAll('.stat-value');
+    stats.forEach((s, i) => {
+      setTimeout(()=> animateCount(s, 800 + i*200), i*200);
+    });
+
+    // friendly greeting (could be dynamic)
+    const now = new Date();
+    const hr = now.getHours();
+    let when = 'Good evening';
+    if(hr < 12) when = 'Good morning';
+    else if(hr < 18) when = 'Good afternoon';
+    document.getElementById('greeting-title').textContent = `${when}, Rohan`;
+  });
+
+  // small demo: add new activity
+  function addActivity(text){
+    const container = document.getElementById('activity');
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = `<div class="what">${text}</div><div class="time">just now</div>`;
+    container.prepend(item);
+  }
+
+</script>
+
+</body>
+</html>

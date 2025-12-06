@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Interview Coach - JobWizard AI</title>
+
+<style>
+body {
+    background:#0a0f1c;
+    color:white;
+    font-family:Poppins, sans-serif;
+    padding-top:120px;
+    margin:0;
+}
+h1 { color:#00eaff; text-align:center; }
+
+.container {
+    width:80%;
+    margin:auto;
+    background:#111827;
+    padding:40px;
+    border-radius:20px;
+    border:1px solid rgba(0,255,255,0.2);
+    box-shadow:0 0 20px rgba(0,255,255,0.1);
+}
+
+label { font-size:18px; }
+
+select, textarea {
+    width:100%;
+    padding:15px;
+    background:#0e1525;
+    border:1px solid rgba(0,255,255,0.3);
+    border-radius:10px;
+    color:white;
+    font-size:16px;
+    margin-top:10px;
+    margin-bottom:25px;
+}
+
+button {
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+    background:linear-gradient(90deg,#00eaff,#1ef7ff);
+    border-radius:12px;
+    color:black;
+    box-shadow:0 0 20px #00eaff;
+    transition:0.3s;
+}
+button:hover { transform:scale(1.05); box-shadow:0 0 40px #00eaff; }
+
+.output {
+    margin-top:30px;
+    padding:25px;
+    background:#0e1525;
+    border:1px solid rgba(0,255,255,0.3);
+    border-radius:15px;
+    white-space:pre-wrap;
+    font-size:18px;
+    line-height:1.7;
+}
+
+.back { text-align:center; margin-top:40px; }
+.back button {
+    width:auto;
+    padding:12px 30px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>AI Interview Coach</h1>
+
+<div class="container">
+
+    <label>Select a Common Interview Question</label>
+    <select id="questionBox">
+        <option value="Tell me about yourself">Tell me about yourself</option>
+        <option value="What are your strengths?">What are your strengths?</option>
+        <option value="What are your weaknesses?">What are your weaknesses?</option>
+        <option value="Why should we hire you?">Why should we hire you?</option>
+        <option value="Describe a challenge you faced and how you handled it">Describe a challenge you faced and how you handled it</option>
+        <option value="Where do you see yourself in 5 years?">Where do you see yourself in 5 years?</option>
+        <option value="Tell me about a time you worked in a team">Tell me about a time you worked in a team</option>
+    </select>
+
+    <label>Your Answer</label>
+    <textarea id="answer" rows="5" placeholder="Type your answer here..."></textarea>
+
+    <button onclick="evaluateAnswer()">Evaluate Answer</button>
+
+    <div id="result" class="output" style="display:none;"></div>
+
+</div>
+
+<div class="back">
+    <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+</div>
+
+<script>
+function evaluateAnswer() {
+    const q = document.getElementById("questionBox").value;
+    const a = document.getElementById("answer").value;
+
+    let score = 0;
+
+    if(a.length > 50) score += 30;
+    if(a.includes("team") || a.includes("project")) score += 20;
+    if(a.includes("improve") || a.includes("learn")) score += 20;
+    if(a.includes("experience") || a.includes("worked")) score += 20;
+    if(a.includes("strength")) score += 10;
+
+    let feedback = "";
+
+    if(score >= 80) feedback = "🔥 Excellent Answer! Very professional and well-structured.";
+    else if(score >= 50) feedback = "👍 Good Answer! You can expand it more with specific examples.";
+    else feedback = "⚠️ Needs Improvement. Try adding experience, skills, and results.";
+
+    const final = `
+Interview Question:
+${q}
+
+Your Score: ${score}/100
+
+Feedback:
+${feedback}
+    `;
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").textContent = final;
+}
+</script>
+
+</body>
+</html>
+
