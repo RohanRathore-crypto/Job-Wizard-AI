@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – JobWizard AI</title>
+
+    <style>
+        body {
+            background: #0b0f1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #0077ff;
+            border: none;
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0057cc;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .link a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <div class="link">
+        Not registered? <a href="signup.html">Create an account</a>
+    </div>
+</div>
+
+<script>
+function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!savedUser) {
+        alert("No account found! Please sign up first.");
+        return;
+    }
+
+    if (email === savedUser.email && password === savedUser.password) {
+        alert("Login successful!");
+        window.location.href = "dashboard.html";  // REDIRECT
+    } else {
+        alert("Incorrect email or password!");
+    }
+}
+</script>
+
+</body>
+</html>
